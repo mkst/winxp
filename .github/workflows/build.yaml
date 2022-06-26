@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on:
-      - macos-11     # macos runner has no Docker
+      - macos-12     # macos runner has no Docker
       - ubuntu-20.04 # ubuntu runner has no /dev/kvm
 
     steps:
