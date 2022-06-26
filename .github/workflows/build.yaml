@@ -6,8 +6,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on:
+      - macos-11     # macos runner has no Docker
+      - ubuntu-20.04 # ubuntu runner has no /dev/kvm
+
     steps:
+    # via https://medium.com/crowdbotics/a-complete-one-by-one-guide-to-install-docker-on-your-mac-os-using-homebrew-e818eb4cfc3
+    - name: Install Docker
+      run: |-
+        brew install docker docker-machine
+        docker-machine create --driver virtualbox default
+        docker-machine env default
+        eval "$(docker-machine env default)"
+      if: ${{ env.RUNNER_OS == 'macOS' }}
+
     - name: Checkout this repo
       uses: actions/checkout@v2
 
@@ -24,13 +36,25 @@ jobs:
       run: |-
         stat /dev/kvm || true
 
-    - name: Execute Stage 1
+    - name: Execute Stage 1 (with KVM)
       run: |-
-        timeout 10m \
+        timeout 20m \
           docker run \
             --rm \
+            --device /dev/kvm \
             -v $(pwd)/out:/out \
             stage1
+      if: ${{ env.RUNNER_OS == 'macOS' }}
+
+    - name: Execute Stage 1 (no KVM)
+      run: |-
+        timeout 20m \
+          docker run \
+            --rm \
+            --device /dev/kvm \
+            -v $(pwd)/out:/out \
+            stage1
+      if: ${{ env.RUNNER_OS != 'macOS' }}
 
     - name: Build Stage 2
       run: |-
