@@ -1,0 +1,37 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@v2
+
+    - name: Fetch Windows XP image
+      run: wget -qO en_win_xp_pro_x64_with_sp2_vl_x13-41611.iso ${{ secrets.WINDOWS_XP_ISO_URL }}
+
+    - name: Build Stage 1
+      run: |-
+        docker build . -f stage1/Dockerfile \
+          -t stage1 \
+          --build-arg PRODUCT_KEY=${{ secrets.WINDOWS_XP_PRODUCT_KEY }}
+
+    - name: Check for /dev/kvm
+      run: |-
+        stat /dev/kvm || true
+
+    - name: Execute Stage 1
+      run: |-
+        timeout 10m \
+          docker run \
+            --rm \
+            -v $(pwd)/out:/out \
+            stage1
+
+    - name: Build Stage 2
+      run: |-
+        docker build . -f stage2/Dockerfile -t xp
