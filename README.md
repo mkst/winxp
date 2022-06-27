@@ -1,12 +1,12 @@
 # Windows XP + Docker
 
-# Preamble
+## Building Image
+
+### Preamble
 
 Place `en_win_xp_pro_x64_with_sp2_vl_x13-41611.iso` in base of this repo.
 
-## Building Image
-
-# Stage 1
+### Stage 1
 
 Create an image with everything needed to install Windows XP into a QCOW2 file.
 
@@ -32,7 +32,7 @@ docker run \
     stage1
 ```
 
-# Stage 2
+### Stage 2
 
 Create an image using the prebuilt Windows XP QCOW2, ready to spin up with samba etc.
 
@@ -67,7 +67,8 @@ docker run \
     xp
 ```
 
-# References
+## References
 
-https://github.com/hectorm/docker-qemu-win2000
-https://github.com/sormy/docker-oldie
+This project would not exist without the work done here:
+ - https://github.com/hectorm/docker-qemu-win2000
+ - https://github.com/sormy/docker-oldie

@@ -13,7 +13,7 @@ RUN mkdir -p /mnt/qemu /share
 
 COPY stage2/smb.conf /etc/samba/smb.conf
 
-COPY stage2/support/start-node.bat /mnt/qemu/
+COPY stage2/provision/start-node.bat /mnt/qemu/
 
 COPY stage2/entrypoint.sh /entrypoint.sh
 

@@ -40,7 +40,7 @@ RUN echo "${VIRTIO_ISO_SHA256}  virtio.iso" | sha256sum -c \
     && cp -v /root/virtio/viostor/${VIRTIO_ARCH}/* '/root/install/$oem$/$1/drivers/' \
     && cp -v /root/virtio/NetKVM/${VIRTIO_ARCH}/* '/root/install/$oem$/$1/drivers/'
 
-COPY stage1/support/winnt.sif /root/install/AMD64/WINNT.SIF
+COPY stage1/provision/winnt.sif /root/install/AMD64/WINNT.SIF
 RUN sed -i \
         -e "s#{productKey}#${PRODUCT_KEY}#" \
         -e "s#{fullName}#${FULL_NAME}#" \
@@ -53,14 +53,14 @@ RUN sed -i \
         /root/install/AMD64/WINNT.SIF
 
 # do we need to remove the final line of TXTSETUP.SIF?
-COPY stage1/support/txtsetup.sif /
+COPY stage1/provision/txtsetup.sif /
 RUN cp -v '/root/install/$oem$/$1/drivers/viostor.sys' /root/install/AMD64/ \
     && sed -i '$ d' /root/install/AMD64/TXTSETUP.SIF \
     && cat txtsetup.sif >> /root/install/AMD64/TXTSETUP.SIF
 
-# install provision support files
-COPY stage1/support/once.bat '/root/install/$oem$/$1/provision/'
-COPY stage1/support/start.bat '/root/install/$oem$/$1/provision/'
+# install provision provision files
+COPY stage1/provision/once.bat '/root/install/$oem$/$1/provision/'
+COPY stage1/provision/start.bat '/root/install/$oem$/$1/provision/'
 
 RUN genisoimage \
         -eltorito-boot "[BOOT]/Boot-NoEmul.img" \

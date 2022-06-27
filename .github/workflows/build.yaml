@@ -38,22 +38,22 @@ jobs:
 
     - name: Execute Stage 1 (with KVM)
       run: |-
-        timeout 20m \
-          docker run \
-            --rm \
-            --device /dev/kvm \
-            -v $(pwd)/out:/out \
-            stage1
+        docker run \
+          --rm \
+          --device /dev/kvm \
+          -v $(pwd)/out:/out \
+          stage1
+      timeout-minutes: 20
       if: ${{ env.RUNNER_OS == 'macOS' }}
 
     - name: Execute Stage 1 (no KVM)
       run: |-
-        timeout 20m \
-          docker run \
-            --rm \
-            --device /dev/kvm \
-            -v $(pwd)/out:/out \
-            stage1
+        docker run \
+          --rm \
+          --device /dev/kvm \
+          -v $(pwd)/out:/out \
+          stage1
+      timeout-minutes: 20
       if: ${{ env.RUNNER_OS != 'macOS' }}
 
     - name: Build Stage 2
